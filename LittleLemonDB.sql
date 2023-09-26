@@ -85,7 +85,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Menus` (
   `MenuID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Cuisine` VARCHAR(60) NOT NULL,
+  `MenuName` VARCHAR(60) NOT NULL,
   PRIMARY KEY (`MenuID`))
 ENGINE = InnoDB;
 
@@ -107,16 +107,16 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`MenuItems_Menus` (
   `MenuID` INT UNSIGNED NOT NULL,
-  `MenuItemsID` INT UNSIGNED NOT NULL,
-  PRIMARY KEY (`MenuID`, `MenuItemsID`),
-  INDEX `menu_items_menu_items_id_fk_idx` (`MenuItemsID` ASC) VISIBLE,
+  `MenuItemID` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`MenuID`, `MenuItemID`),
+  INDEX `menu_items_menu_items_id_fk_idx` (`MenuItemID` ASC) VISIBLE,
   CONSTRAINT `menu_items_menu_id_fk`
     FOREIGN KEY (`MenuID`)
     REFERENCES `LittleLemonDB`.`Menus` (`MenuID`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `menu_items_menu_items_id_fk`
-    FOREIGN KEY (`MenuItemsID`)
+    FOREIGN KEY (`MenuItemID`)
     REFERENCES `LittleLemonDB`.`MenuItems` (`MenuItemID`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
@@ -155,15 +155,17 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Orders` (
   `OrderID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `OrderDate` DATE NOT NULL,
+  `Quantity` INT NOT NULL,
   `TotalCost` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-  `CustomerID` INT UNSIGNED NULL COMMENT 'This can be NULL when the order is from a booking. If it is not NULL, then the order is from a walk-in customers. If it is NULL, the order originates from a booking.',
-  `BookingID` INT UNSIGNED NULL COMMENT 'This can be NULL when the order is not from a booking. If it is not NULL, then the order originate from a customer with a booking. If it is NULL, the order originates from a walk-in customer that does not have a prior booking.\n\nThere will be a database-level check to ensure accurancy and interity:\nCHECK (BookingID IS NOT NULL OR CustomerID IS NOT NULL).\n\nThis CHECK constraint ensures that at least one of BookingID or CustomerID must be non-null. If both are null, the database will reject the insert or update operation.\n\nNote: The support for CHECK constraints was properly added in MySQL 8.0.16. So we must have to use this version',
+  `MenuID` INT UNSIGNED NOT NULL,
+  `CustomerID` INT UNSIGNED NOT NULL COMMENT 'This is included to make it possible to have an order from walk-in customers (customers without a booking). If the order orignates from a booking, the value will be the same as the CustomerID in the bookings table.',
+  `BookingID` INT UNSIGNED NULL COMMENT 'This value can only be NULL for walk-in cutomers (customers without a booking)',
   `EmployeeID` INT UNSIGNED NULL COMMENT 'EmployeeID can be NULL when the order is an online order',
   PRIMARY KEY (`OrderID`),
- CHECK (BookingID IS NOT NULL OR CustomerID IS NOT NULL),
   INDEX `order_customer_id_fk_idx` (`CustomerID` ASC) VISIBLE,
   INDEX `order_booking_id_fk_idx` (`BookingID` ASC) VISIBLE,
   INDEX `order_employee_id_fk_idx` (`EmployeeID` ASC) VISIBLE,
+  INDEX `order_menu_id_fk_idx` (`MenuID` ASC) VISIBLE,
   CONSTRAINT `order_customer_id_fk`
     FOREIGN KEY (`CustomerID`)
     REFERENCES `LittleLemonDB`.`Customers` (`CustomerID`)
@@ -178,30 +180,10 @@ CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Orders` (
     FOREIGN KEY (`EmployeeID`)
     REFERENCES `LittleLemonDB`.`Employees` (`EmployeeID`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `LittleLemonDB`.`OrderDetails`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`OrderDetails` (
-  `OrderDetailID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `OrderID` INT UNSIGNED NOT NULL,
-  `MenuItemID` INT UNSIGNED NOT NULL,
-  `Quantity` INT NOT NULL,
-  `Cost` DECIMAL(10,2) NOT NULL,
-  PRIMARY KEY (`OrderDetailID`),
-  INDEX `order_detail_order_id_fk_idx` (`OrderID` ASC) VISIBLE,
-  INDEX `order_detail_menu_item_id_fk_idx` (`MenuItemID` ASC) VISIBLE,
-  CONSTRAINT `order_detail_order_id_fk`
-    FOREIGN KEY (`OrderID`)
-    REFERENCES `LittleLemonDB`.`Orders` (`OrderID`)
-    ON DELETE CASCADE
     ON UPDATE NO ACTION,
-  CONSTRAINT `order_detail_menu_item_id_fk`
-    FOREIGN KEY (`MenuItemID`)
-    REFERENCES `LittleLemonDB`.`MenuItems` (`MenuItemID`)
+  CONSTRAINT `order_menu_id_fk`
+    FOREIGN KEY (`MenuID`)
+    REFERENCES `LittleLemonDB`.`Menus` (`MenuID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
