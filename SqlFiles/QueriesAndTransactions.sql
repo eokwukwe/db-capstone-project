@@ -43,10 +43,10 @@ CALL CheckBooking('2023-10-02', 2);
 -- Use an IF ELSE statement to check if a table is already booked on the given date. 
 -- If the table is already booked, then rollback the transaction. If the table is available, then commit the transaction. 
 
-DROP PROCEDURE IF EXISTS AddValidBooking;
+DROP PROCEDURE IF EXISTS ManageBooking;
 
 DELIMITER //
-CREATE PROCEDURE AddValidBooking(
+CREATE PROCEDURE ManageBooking(
   IN bookDate DATE, 
   IN tableNo INT, 
   IN bookSlot VARCHAR(10), 
@@ -78,4 +78,4 @@ BEGIN
 END //
 DELIMITER ;
 
-CALL AddValidBooking('2023-11-10', 10, '02:20:00', 2, 3);
+CALL ManageBooking('2023-11-10', 10, '02:20:00', 2, 3);
