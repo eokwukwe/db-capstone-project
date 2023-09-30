@@ -8,8 +8,6 @@ USE littlelemondb;
 -- booking date,
 -- and table number.
 
-DROP PROCEDURE IF EXISTS AddBooking;
-
 DELIMITER //
 CREATE PROCEDURE AddBooking(
     IN customerId INT,
@@ -30,8 +28,6 @@ DELIMITER ;
 -- Task 2
 -- For your second task, Little Lemon need you to create a new procedure called UpdateBooking that they can use to update existing bookings in the booking table.
 -- The procedure should have two input parameters in the form of booking id and booking date. You must also include an UPDATE statement inside the procedure. 
-
-DROP PROCEDURE IF EXISTS UpdateBooking;
 
 DELIMITER //
 CREATE PROCEDURE UpdateBooking(
@@ -59,10 +55,9 @@ DELIMITER //
 CREATE PROCEDURE CancelBooking(
     IN bookingId INT
 )
-BEGIN
-    
+BEGIN    
   DELETE FROM Bookings WHERE BookingID = bookingId;
-        
+          
   SELECT CONCAT("Booking ", bookingId, " cancelled") AS Confirmation;
 END //
 DELIMITER ;

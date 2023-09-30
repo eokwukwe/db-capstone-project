@@ -1,15 +1,18 @@
--- Get max quantity in an order
+USE littlelemondb;
+
+-- GetMaxQuantity procedure
+DROP PROCEDURE IF EXISTS GetMaxQuantity;
+
 CREATE PROCEDURE GetMaxQuantity()
 	SELECT MAX(Quantity) AS 'Max Quantity in Order' FROM Orders;
 
--- Manage a booking
+-- ManageBooking procedure
+DROP PROCEDURE IF EXISTS ManageBooking;
+
 DELIMITER //
 CREATE PROCEDURE ManageBooking(
   IN bookDate DATE, 
-  IN tableNo INT, 
-  IN bookSlot VARCHAR(10), 
-  IN customerId INT, 
-  IN employeeId INT
+  IN tableNo INT
 )
 BEGIN
   DECLARE status VARCHAR(255);
@@ -20,7 +23,7 @@ BEGIN
   IF NOT EXISTS (SELECT * FROM Bookings WHERE BookingDate = bookDate AND TableNumber = tableNo) THEN
     -- If not exists, then insert the new booking
     INSERT INTO Bookings(BookingDate, TableNumber, BookingSlot, CustomerID, EmployeeID)
-    VALUES (bookDate, tableNo, bookSlot, customerId, employeeId);
+    VALUES (bookDate, tableNo, '18:25:00', 1, 2);
     
     SET status = CONCAT('Table ', tableNo, ' is successfully booked.');
     
@@ -36,50 +39,48 @@ BEGIN
 END //
 DELIMITER ;
 
--- Add a new booking
+-- AddBooking procedure
+DROP PROCEDURE IF EXISTS AddBooking;
+
 DELIMITER //
 CREATE PROCEDURE AddBooking(
-    IN customerId INT,
-    IN bookingDate DATE,
+    IN bookId INT,
+    IN custId INT,
     IN tableNo INT,
-    IN employeeId INT,
-    IN bookingSlot TIME
+    IN bookDate DATE
 )
 BEGIN
     
-	INSERT INTO Bookings(TableNumber, BookingDate, BookingSlot, CustomerID, EmployeeID)
-		VALUEs(tableNo, bookingDate, bookingSlot, customerId, employeeId);
-        
-	SELECT "New booking added" AS Confirmation;
+	INSERT INTO Bookings(BookingID, TableNumber, BookingDate, BookingSlot, CustomerID, EmployeeID)
+		VALUES(bookId, tableNo, bookDate, '10:20:00', custId, 1);
+
 END //
 DELIMITER ;
 
--- Update a booking
+-- UpdateBooking procedure
+DROP PROCEDURE IF EXISTS UpdateBooking;
+
 DELIMITER //
 CREATE PROCEDURE UpdateBooking(
-    IN bookingId INT,
-    IN bookingDate DATE
+    IN bookId INT,
+    IN bookDate DATE
 )
 BEGIN
     
   UPDATE Bookings
-	SET BookingDate = bookingDate
-	WHERE BookingID = bookingId;
-        
-  SELECT CONCAT("Booking ", bookingId, " updated") AS Confirmation;
+	SET BookingDate = bookDate
+	WHERE BookingID = bookId;
 END //
 DELIMITER ;
 
+-- CancelBooking procedure
+DROP PROCEDURE IF EXISTS CancelBooking;
 
--- Cancel a booking
 DELIMITER //
 CREATE PROCEDURE CancelBooking(
-    IN bookingId INT
+    IN bookId INT
 )
-BEGIN
-    
-  DELETE FROM Bookings WHERE BookingID = bookingId;
-        
-  SELECT CONCAT("Booking ", bookingId, " cancelled") AS Confirmation;
+BEGIN    
+  DELETE FROM Bookings WHERE BookingID = bookId;
 END //
 DELIMITER ;

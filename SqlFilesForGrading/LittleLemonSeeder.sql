@@ -13,17 +13,17 @@ INSERT INTO Employees (Name, Email, Salary, ContactNumber, Address, RoleID) VALU
 
 
 -- Insert Customers
-INSERT INTO Customers (Name, Email, ContactNumber) VALUES 
-('John Mane', 'john@email.com', 1234567890),
-('Jane Chukk', 'jane@email.com', 1234567891),
-('Sam Francis', 'sam@email.com', 1234567892),
-('Sara Chills', 'sara@email.com', 1234567893),
-('Tom Hanks', 'tom@email.com', 1234567894),
-('Tina Toddle', 'tina@email.com', 1234567895),
-('Mike Pence', 'mike@email.com', 1234567896),
-('Mila Jones', 'mila@email.com', 1234567897),
-('Jack Withman', 'jack@email.com', 1234567898),
-('Jill Klanm', 'jill@email.com', 1234567899);
+INSERT INTO Customers (CustomerID, Name, Email, ContactNumber) VALUES 
+(1, 'John Mane', 'john@email.com', 1234567890),
+(2, 'Jane Chukk', 'jane@email.com', 1234567891),
+(3, 'Sam Francis', 'sam@email.com', 1234567892),
+(4, 'Sara Chills', 'sara@email.com', 1234567893),
+(5, 'Tom Hanks', 'tom@email.com', 1234567894),
+(6, 'Tina Toddle', 'tina@email.com', 1234567895),
+(7, 'Mike Pence', 'mike@email.com', 1234567896),
+(8, 'Mila Jones', 'mila@email.com', 1234567897),
+(9, 'Jack Withman', 'jack@email.com', 1234567898),
+(99, 'Jill Klanm', 'jill@email.com', 1234567899);
 
 -- Insert Addresses
 INSERT INTO Addresses (Street, City, State, Type, CustomerID) VALUES 
@@ -36,7 +36,7 @@ INSERT INTO Addresses (Street, City, State, Type, CustomerID) VALUES
 ('104 Jackson Blvd', 'Chicago', 'IL', 'Shipping', 7),
 ('105 Van Buren St', 'Chicago', 'IL', 'Shipping', 8),
 ('106 Harrison St', 'Chicago', 'IL', 'Shipping', 9),
-('107 Congress Pkwy', 'Chicago', 'IL', 'Shipping', 10);
+('107 Congress Pkwy', 'Chicago', 'IL', 'Shipping', 99);
 
 -- Insert Menus
 INSERT INTO Menus (MenuName) VALUES ('Italian'), ('Chinese'), ('Mexican'), ('Indian'), ('American'), ('Japanese'), ('Thai'), ('French'), ('Greek'), ('Spanish');
@@ -110,7 +110,7 @@ INSERT INTO Bookings (TableNumber, BookingDate, BookingSlot, CustomerID, Employe
 INSERT INTO Orders (OrderDate, Quantity, TotalCost, MenuID, CustomerID, BookingID, EmployeeID) VALUES 
 ('2023-10-01', 3, 200.00, 1, 1, 1, 1),
 ('2023-10-02', 2, 180.00, 2, 2, 2, 2),
-('2023-10-03', 4, 250.00, 3, 3, 3, 3),
+('2023-10-03', 5, 250.00, 3, 3, 3, 3),
 ('2023-10-04', 2, 190.00, 4, 4, 4, 4),
 ('2023-10-05', 3, 210.00, 5, 5, 5, 5),
 ('2023-10-06', 2, 175.00, 6, 6, 6, 1),
@@ -126,7 +126,7 @@ INSERT INTO Orders (OrderDate, Quantity, TotalCost, MenuID, CustomerID, BookingI
 ('2023-10-16', 2, 185.00, 6, 7, NULL, 1),
 ('2023-10-17', 4, 255.00, 7, 8, NULL, 2),
 ('2023-10-18', 1, 85.00, 8, 9, NULL, 3),
-('2023-10-19', 2, 190.00, 9, 10, NULL, 4),
+('2023-10-19', 2, 190.00, 9, 99, NULL, 4),
 ('2023-10-20', 3, 225.00, 10, 7, NULL, 5);
 
 -- Insert Deliveries
